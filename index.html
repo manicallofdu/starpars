@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#153029">
+<title>کافه رستوران استارپارس | منوی دیجیتال</title>
+<meta name="description" content="منوی دیجیتال کافه رستوران استارپارس — قهوه اصیل ایتالیایی، دسر و صبحانه.">
+
+<!-- ===== فونت فارسی (Vazirmatn) ===== -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* =========================================================
+   ۱) متغیرهای طراحی — تنها جایی که برای تغییر تم لازم است
+   ========================================================= */
+:root{
+  --forest:        #153029;   /* سبز جنگلی تیره — رنگ اصلی برند */
+  --forest-soft:   #245046;   /* روشن‌تر، برای گرادیان و هاور */
+  --forest-deep:   #0e211c;   /* تیره‌ترین، برای فوتر */
+  --cream:         #f4ede4;   /* کرم گرم — پس‌زمینه و متن روی تیره */
+  --gold:          #c8a45c;   /* طلایی ملایم — فقط برای جزئیات اندک */
+
+  --ink:           #153029;                       /* رنگ متن اصلی روی کرم */
+  --ink-muted:     rgba(21, 48, 41, .58);         /* متن توضیحات (کم‌رنگ) */
+  --hairline:      rgba(21, 48, 41, .10);         /* خط‌های مویی جداکننده */
+
+  --radius:        14px;
+  --pad:           clamp(1.15rem, 5vw, 2.5rem);   /* فاصله کناری، سیال */
+  --max:           1080px;
+}
+
+/* =========================================================
+   ۲) ریست پایه
+   ========================================================= */
+*,*::before,*::after{ box-sizing:border-box; }
+
+html{
+  -webkit-text-size-adjust:100%;
+  scroll-behavior:smooth;          /* پیمایش نرم بین دسته‌بندی‌ها */
+}
+
+body{
+  margin:0;
+  font-family:'Vazirmatn', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size:16px;
+  line-height:1.75;
+  color:var(--ink);
+  background:var(--cream);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+h1,h2,h3,p,ul,figure{ margin:0; }
+ul{ padding:0; list-style:none; }
+a{ color:inherit; text-decoration:none; }
+img{ max-width:100%; display:block; }
+address{ font-style:normal; }
+
+/* ظرف مرکزی — همه بخش‌ها داخل آن قرار می‌گیرند */
+.wrap{ width:100%; max-width:var(--max); margin-inline:auto; }
+
+/* بخش‌های منو فاصله‌ی مناسب برای اسکرول زیر نوار چسبان */
+.section{ padding:clamp(2rem,7vw,3.25rem) var(--pad); scroll-margin-top:4.75rem; }
+
+/* =========================================================
+   ۳) سربرگ / هیرو
+   ========================================================= */
+.hero{
+  background:radial-gradient(125% 145% at 88% 0%, var(--forest-soft) 0%, var(--forest) 58%);
+  color:var(--cream);
+  text-align:center;
+  padding:clamp(2.75rem,11vw,5rem) var(--pad) clamp(2.25rem,8vw,3.5rem);
+}
+
+.hero__brand{
+  font-size:clamp(1.6rem,7vw,2.6rem);
+  font-weight:700;
+  letter-spacing:-.01em;
+  line-height:1.35;
+}
+
+/* خط طلایی ظریف زیر نام برند */
+.hero__rule{
+  width:350px; height:1px; margin:auto;
+  background:linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.hero__tagline{
+  max-width:34ch; margin-inline:auto;
+  font-size:clamp(.86rem,3.4vw,1rem);
+  font-weight:400;
+  color:rgba(244,237,228,.72);
+}
+
+.hero__meta{
+  margin-top:1.75rem;
+  font-size:.72rem;
+  letter-spacing:.16em;
+  color:rgba(244,237,228,.45);
+}
+
+/* =========================================================
+   ۴) نوار دسته‌بندی (Pills) — چسبان هنگام اسکرول
+   ========================================================= */
+.filters{
+  position:sticky;
+  top:0;
+  z-index:30;
+  background:rgba(244,237,228,.9);
+  -webkit-backdrop-filter:saturate(160%) blur(10px);
+  backdrop-filter:saturate(160%) blur(10px);
+  border-bottom:1px solid var(--hairline);
+}
+
+.filters__track{
+  display:flex;
+  gap:.5rem;
+  padding:.7rem var(--pad);
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;              /* فایرفاکس */
+  max-width:var(--max);
+  margin-inline:auto;
+}
+.filters__track::-webkit-scrollbar{ display:none; }
+
+.pill{
+  flex:0 0 auto;
+  padding:.48rem 1.05rem;
+  border:1px solid rgba(21,48,41,.18);
+  border-radius:999px;
+  font-size:.8rem;
+  font-weight:500;
+  white-space:nowrap;
+  color:var(--ink);
+  transition:background .22s ease, border-color .22s ease, color .22s ease;
+}
+/* تنها افکت‌ها: تغییر رنگ و پس‌زمینه — بدون انیمیشن سنگین */
+.pill:hover,
+.pill:focus-visible{
+  background:var(--forest);
+  border-color:var(--forest);
+  color:var(--cream);
+  outline:none;
+}
+
+/* =========================================================
+   ۵) سرتیتر هر دسته‌بندی
+   ========================================================= */
+.section__head{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:baseline;
+  gap:.35rem .85rem;
+  margin-bottom:clamp(1.35rem,5vw,2rem);
+  padding-bottom:.9rem;
+  border-bottom:1px solid var(--hairline);
+}
+
+.section__title{
+  font-size:clamp(1.08rem,4.4vw,1.4rem);
+  font-weight:700;
+  line-height:1.5;
+}
+
+/* نام ایتالیایی دسته — برای حس ادیتوریال */
+.section__en{
+  font-family:Georgia, 'Times New Roman', serif;
+  font-style:italic;
+  font-size:.76rem;
+  letter-spacing:.03em;
+  color:var(--gold);
+}
+
+/* =========================================================
+   ۶) شبکه‌ی آیتم‌ها — موبایل‌فرست
+   ========================================================= */
+.grid{
+  display:grid;
+  grid-template-columns:1fr;          /* موبایل: یک‌ستونه (خوانا‌ترین حالت) */
+  gap:.8rem;
+}
+
+@media (min-width:640px){
+  .grid{ grid-template-columns:repeat(2, 1fr); gap:1rem; }
+}
+
+/* ---------- کارت هر آیتم ---------- */
+.item{
+  display:flex;
+  flex-direction:row;                 /* تصویر (راست) + بدنه‌ی متن (چپ) — در RTL خودکار */
+  align-items:center;                 /* تراز عمودی تصویر با بدنه */
+  gap:1rem;                           /* فاصله‌ی تصویر از بدنه */
+  padding:1.05rem 1.15rem;
+  background:rgba(255,255,255,.55);
+  border:1px solid var(--hairline);
+  border-radius:var(--radius);
+  transition:border-color .25s ease, background-color .25s ease;
+}
+.item:hover{
+  border-color:rgba(200,164,92,.55);
+  background:rgba(255,255,255,.8);
+}
+
+/* ---------- تصویر بندانگشتی هر آیتم ---------- */
+.item__media{
+  flex:0 0 auto;                      /* هرگز فشرده یا کشیده نشود */
+  width:84px;                         /* ابعاد ثابت بندانگشتی */
+  height:84px;
+  margin:0;                           /* figure به‌صورت پیش‌فرض حاشیه دارد */
+  overflow:hidden;
+  border-radius:calc(var(--radius) - 4px);   /* هماهنگ با گوشه‌ی کارت */
+  background:rgba(21,48,41,.06);      /* پس‌زمینه‌ی ملایم تا پیش از لود تصویر */
+}
+
+.item__media img{
+  width:100%;
+  height:100%;
+  object-fit:cover;                   /* بدون کشیدگی — برش مرکزی */
+  object-position:center;
+}
+
+/* ---------- بدنه‌ی متن هر آیتم ---------- */
+.item__body{
+  display:flex;                       /* هم‌ارز چیدمان ستونی کارت قبلی (حفظ رفتار بج‌ها) */
+  flex-direction:column;
+  flex:1 1 auto;
+  min-width:0;                        /* جلوگیری از سرریز متن‌های طولانی */
+}
+
+/* ردیف اول: نام (راست) + قیمت (چپ) */
+.item__top{
+  display:flex;
+  align-items:baseline;
+  gap:.85rem;
+}
+
+.item__name{
+  flex:1 1 auto;
+  font-size:.97rem;
+  font-weight:700;
+  line-height:1.6;
+  color:var(--ink);
+}
+
+/* نام لاتین — زیر عنوان فارسی */
+.item__en{
+  display:block;
+  font-family:Georgia, 'Times New Roman', serif;
+  font-style:italic;
+  font-size:.74rem;
+  font-weight:400;
+  letter-spacing:.02em;
+  color:rgba(21,48,41,.45);
+  margin-top:.1rem;
+}
+
+/* 💰 قیمت — به‌سمت چپ ردیف تراز می‌شود (چون چیدمان RTL است) */
+.item__price{
+  flex:0 0 auto;
+  font-size:.9rem;
+  font-weight:500;
+  white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+  color:var(--forest);
+}
+
+.item__desc{
+  margin-top:.45rem;
+  font-size:.8rem;
+  font-weight:400;
+  line-height:1.9;
+  color:var(--ink-muted);
+}
+
+/* ---------- نشان‌ها (Badge) ---------- */
+.badge{
+  align-self:flex-start;
+  margin-top:.75rem;
+  padding:.18rem .62rem;
+  border:1px solid rgba(21,48,41,.13);
+  border-radius:999px;
+  background:rgba(21,48,41,.06);
+  font-size:.66rem;
+  font-weight:500;
+  color:#2c5a4e;
+}
+
+/* نشان طلایی برای «پیشنهاد باریستا» */
+.badge--gold{
+  background:rgba(200,164,92,.15);
+  border-color:rgba(200,164,92,.42);
+  color:#8a6a2a;
+}
+
+/* یادداشت پایانی هر بخش (مثلاً درباره‌ی شیر گیاهی) */
+.section__note{
+  margin-top:1.35rem;
+  font-size:.72rem;
+  text-align:center;
+  color:var(--ink-muted);
+}
+
+/* =========================================================
+   ۷) فوتر
+   ========================================================= */
+.footer{
+  background:var(--forest-deep);
+  color:var(--cream);
+  padding:clamp(2.25rem,8vw,3.5rem) var(--pad) clamp(1.75rem,6vw,2.5rem);
+  margin-top:clamp(1.5rem,6vw,3rem);
+}
+
+.footer__brand{
+  font-size:1.15rem;
+  font-weight:700;
+  margin-bottom:1.75rem;
+}
+
+.footer__grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:1.5rem;
+}
+@media (min-width:640px){
+  .footer__grid{ grid-template-columns:repeat(3, 1fr); gap:2rem; }
+}
+
+.footer__label{
+  font-size:.68rem;
+  font-weight:500;
+  letter-spacing:.14em;
+  color:rgba(244,237,228,.45);
+  margin-bottom:.4rem;
+}
+
+.footer__value{
+  font-size:.84rem;
+  line-height:1.9;
+  color:rgba(244,237,228,.85);
+}
+
+.footer__link{
+  transition:color .22s ease, opacity .22s ease;
+}
+.footer__link:hover{ color:var(--gold); }
+
+/* یادداشت اصلی: سفارش را حضوری اعلام کنید */
+.footer__note{
+  margin-top:clamp(1.75rem,7vw,2.75rem);
+  padding-top:1.35rem;
+  border-top:1px solid rgba(244,237,228,.12);
+  text-align:center;
+  font-size:.78rem;
+  color:rgba(244,237,228,.6);
+}
+
+.footer__copy{
+  margin-top:.85rem;
+  text-align:center;
+  font-size:.68rem;
+  color:rgba(244,237,228,.32);
+}
+
+/* =========================================================
+   ۸) دسترس‌پذیری و حالت‌های خاص
+   ========================================================= */
+:focus-visible{ outline:2px solid var(--gold); outline-offset:3px; }
+
+/* احترام به کاربرانی که انیمیشن نمی‌خواهند */
+@media (prefers-reduced-motion:reduce){
+  html{ scroll-behavior:auto; }
+  *{ transition:none !important; }
+}
+
+/* نسخه‌ی چاپی — برای میزهای کافه */
+@media print{
+  .filters{ display:none; }
+  body{ background:#fff; }
+  .item{ border-color:#ddd; background:#fff; }
+  .hero{ background:#fff; color:#000; }
+}
+
+.item__media{
+  box-shadow: 0px 0px 15px black 
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     سربرگ / هیرو — نام برند و شعار
+     ========================================================= -->
+<header class="hero">
+  <div class="wrap">
+    <!-- ✏️ نام کافه — از اینجا ویرایش کنید -->
+    <h1 class="hero__brand">کافه رستوران استارپارس</h1>
+    <div class="hero__rule" aria-hidden="true"></div>
+
+    <!-- ✏️ شعار -->
+    <p class="hero__tagline">طعم‌هایی که برای همیشه زیر زبانت می‌مانند :)</p>
+
+    <p class="hero__meta"></p>
+  </div>
+</header>
+
+<!-- =========================================================
+     نوار دسته‌بندی — با اسکرول نرم به هر بخش می‌پرد
+     ========================================================= -->
+<nav class="filters" aria-label="دسته‌بندی منو">
+  <ul class="filters__track">
+    <li><a class="pill" href="#hot">اسپرسو و قهوه‌های گرم</a></li>
+    <li><a class="pill" href="#cold">نوشیدنی‌های سرد</a></li>
+    <li><a class="pill" href="#dessert">دسر و کیک</a></li>
+    <li><a class="pill" href="#breakfast">صبحانه و میان‌وعده</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- =======================================================
+       دسته ۱ — اسپرسو و قهوه‌های گرم
+       ======================================================= -->
+  <section class="section" id="hot">
+    <div class="wrap">
+      <header class="section__head">
+        <h2 class="section__title">اسپرسو و قهوه‌های گرم</h2>
+        <span class="section__en">Caffetteria Calda</span>
+      </header>
+
+      <div class="grid">
+
+        <!-- ---------- آیتم ---------- -->
+        <article class="item">
+          <figure class="item__media">
+            <!-- 🖼️ تصویر محصول — آدرس را جایگزین کنید -->
+            <img src="img/spreso_single.jpg" alt="اسپرسو سینگل" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                اسپرسو سینگل
+                <span class="item__en" dir="ltr">Espresso Solo</span>
+              </h3>
+              <!-- 💰 قیمت -->
+              <span class="item__price">۵۵٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">۳۰ میلی‌لیتر · ۱۰۰٪ عربیکا · روست مدیوم · کرمای غنی</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="img/spreso_duble.jpg" alt="اسپرسو دوپیو" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                اسپرسو دوپیو
+                <span class="item__en" dir="ltr">Espresso Doppio</span>
+              </h3>
+              <span class="item__price">۷۵٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">دو شات · بادی سنگین · نُت کاکائو و بادام</p>
+            <span class="badge badge--gold">پیشنهاد باریستا</span>
+          </div>
+        </article>
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="img/amerikano.jpg" alt="آمریکانو" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                آمریکانو
+                <span class="item__en" dir="ltr">Caffè Americano</span>
+              </h3>
+              <span class="item__price">۸۵٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">اسپرسو و آب گرم · طعمی شفاف و ملایم</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="img/kapochino.jpg" alt="کاپوچینو کلاسیک" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                کاپوچینو کلاسیک
+                <span class="item__en" dir="ltr">Cappuccino Classico</span>
+              </h3>
+              <span class="item__price">۹۵٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">نسبت ۱:۱:۱ · فوم میکرو · شیر تازه</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="images/flat-white.jpg" alt="فلت وایت" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                فلت وایت
+                <span class="item__en" dir="ltr">Flat White</span>
+              </h3>
+              <span class="item__price">۱۰۵٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">دو شات با شیر مخملی · کم‌فوم، پرمغز</p>
+            <span class="badge">جدید</span>
+          </div>
+        </article>
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="images/vanilla-latte.jpg" alt="لاته وانیل" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                لاته وانیل
+                <span class="item__en" dir="ltr">Vanilla Latte</span>
+              </h3>
+              <span class="item__price">۱۱۵٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">شیر بخارپز · عصاره وانیل ماداگاسکار</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="images/mocha.jpg" alt="موکا ایتالیانو" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                موکا ایتالیانو
+                <span class="item__en" dir="ltr">Mocha Italiano</span>
+              </h3>
+              <span class="item__price">۱۲۵٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">شکلات تلخ ۷۰٪ · اسپرسو · خامه تازه</p>
+          </div>
+        </article>
+
+      </div>
+
+      <p class="section__note">شیر گیاهی (بادام، جو دوسر، سویا) برای همه‌ی نوشیدنی‌ها موجود است.</p>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       دسته ۲ — نوشیدنی‌های سرد
+       ======================================================= -->
+  <section class="section" id="cold">
+    <div class="wrap">
+      <header class="section__head">
+        <h2 class="section__title">نوشیدنی‌های سرد</h2>
+        <span class="section__en">Bevande Fredde</span>
+      </header>
+
+      <div class="grid">
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="img/amerikano.jpg" alt="آیس آمریکانو" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                آیس آمریکانو
+                <span class="item__en" dir="ltr">Iced Americano</span>
+              </h3>
+              <span class="item__price">۹۵٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">اسپرسو، آب سرد و یخ · سبک و خنک</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="images/cold-brew.jpg" alt="کلد برو ۱۸ ساعته" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                کلد برو ۱۸ ساعته
+                <span class="item__en" dir="ltr">Cold Brew</span>
+              </h3>
+              <span class="item__price">۱۲۵٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">استخراج سرد طی ۱۸ ساعت · نُت مرکباتی · بدون اسیدیتی</p>
+            <span class="badge badge--gold">پیشنهاد باریستا</span>
+          </div>
+        </article>
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="images/iced-latte.jpg" alt="آیس لاته" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                آیس لاته
+                <span class="item__en" dir="ltr">Iced Latte</span>
+              </h3>
+              <span class="item__price">۱۲۰٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">دو شات اسپرسو روی شیر سرد و یخ</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="images/frappe.jpg" alt="فراپه اسپرسو" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                فراپه اسپرسو
+                <span class="item__en" dir="ltr">Espresso Frappè</span>
+              </h3>
+              <span class="item__price">۱۳۵٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">یخ خردشده · شیر · شربت اسپرسو</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="images/limonata.jpg" alt="لیموناد نعنا" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                لیموناد نعنا
+                <span class="item__en" dir="ltr">Limonata alla Menta</span>
+              </h3>
+              <span class="item__price">۹۵٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">لیموی تازه · نعنا · سودا</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="images/peach-iced-tea.jpg" alt="آیس تی هلو" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                آیس تی هلو
+                <span class="item__en" dir="ltr">Peach Iced Tea</span>
+              </h3>
+              <span class="item__price">۸۵٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">چای سیاه دم‌کرده · هلو · یخ</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="images/chocolate-shake.jpg" alt="شیک شکلات" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                شیک شکلات
+                <span class="item__en" dir="ltr">Chocolate Shake</span>
+              </h3>
+              <span class="item__price">۱۴۵٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">بستنی وانیل · شکلات تلخ · شیر تازه</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       دسته ۳ — دسر و کیک
+       ======================================================= -->
+  <section class="section" id="dessert">
+    <div class="wrap">
+      <header class="section__head">
+        <h2 class="section__title">دسر و کیک</h2>
+        <span class="section__en">Dolci e Torte</span>
+      </header>
+
+      <div class="grid">
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="images/tiramisu.jpg" alt="تیرامیسو" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                تیرامیسو
+                <span class="item__en" dir="ltr">Tiramisù</span>
+              </h3>
+              <span class="item__price">۱۸۵٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">ماسکارپونه · اسپرسو · بیسکویت ساوویاردی</p>
+            <span class="badge badge--gold">پیشنهاد باریستا</span>
+          </div>
+        </article>
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="images/cheesecake.jpg" alt="چیزکیک نیویورکی" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                چیزکیک نیویورکی
+                <span class="item__en" dir="ltr">New York Cheesecake</span>
+              </h3>
+              <span class="item__price">۱۶۵٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">پنیر خامه‌ای · پایه‌ی بیسکویتی · سس توت</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="images/brownie.jpg" alt="براونی شکلات تلخ" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                براونی شکلات تلخ
+                <span class="item__en" dir="ltr">Brownie al Cioccolato</span>
+              </h3>
+              <span class="item__price">۱۴۵٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">۷۰٪ کاکائو · گرم سرو می‌شود · همراه بستنی</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="images/cannoli.jpg" alt="کانولی سیسیلی" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                کانولی سیسیلی
+                <span class="item__en" dir="ltr">Cannoli Siciliano</span>
+              </h3>
+              <span class="item__price">۱۵۵٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">پوسته‌ی ترد · ریکوتای وانیلی · پسته</p>
+            <span class="badge">جدید</span>
+          </div>
+        </article>
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="images/cornetto.jpg" alt="کروسان کرم" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                کروسان کرم
+                <span class="item__en" dir="ltr">Cornetto alla Crema</span>
+              </h3>
+              <span class="item__price">۱۲۰٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">خمیر ورقه‌ای کره‌ای · کرم پاتیسیر</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="images/basque-cheesecake.jpg" alt="باسک چیزکیک" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                باسک چیزکیک
+                <span class="item__en" dir="ltr">Basque Cheesecake</span>
+              </h3>
+              <span class="item__price">۱۷۵٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">سطح کاراملی · بافت نرم و خامه‌ای</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       دسته ۴ — صبحانه و میان‌وعده
+       ======================================================= -->
+  <section class="section" id="breakfast">
+    <div class="wrap">
+      <header class="section__head">
+        <h2 class="section__title">صبحانه و میان‌وعده</h2>
+        <span class="section__en">Colazione e Spuntini</span>
+      </header>
+
+      <div class="grid">
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="images/frittata.jpg" alt="اوملت ایتالیایی" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                اوملت ایتالیایی
+                <span class="item__en" dir="ltr">Frittata Italiana</span>
+              </h3>
+              <span class="item__price">۱۹۵٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">تخم‌مرغ · پنیر · سبزیجات فصل · نان تست</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="images/avocado-toast.jpg" alt="تست آووکادو" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                تست آووکادو
+                <span class="item__en" dir="ltr">Avocado Toast</span>
+              </h3>
+              <span class="item__price">۲۱۵٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">نان خمیرمایه · آووکادو · تخم‌مرغ آب‌پز · دانه کنجد</p>
+            <span class="badge badge--gold">پیشنهاد باریستا</span>
+          </div>
+        </article>
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="images/panini.jpg" alt="پنینی پستو" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                پنینی پستو
+                <span class="item__en" dir="ltr">Panini al Pesto</span>
+              </h3>
+              <span class="item__price">۲۲۵٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">موزارلا · پستو ریحان · گوجه خشک</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="images/brioche.jpg" alt="بریوش پنیر و عسل" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                بریوش پنیر و عسل
+                <span class="item__en" dir="ltr">Brioche Formaggio e Miele</span>
+              </h3>
+              <span class="item__price">۱۶۵٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">پنیر سفید · عسل طبیعی · گردو</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="images/yogurt-granola.jpg" alt="کاسه ماست و گرانولا" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                کاسه ماست و گرانولا
+                <span class="item__en" dir="ltr">Yogurt e Granola</span>
+              </h3>
+              <span class="item__price">۱۴۵٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">ماست چکیده · گرانولای خانگی · میوه فصل</p>
+          </div>
+        </article>
+
+        <article class="item">
+          <figure class="item__media">
+            <img src="images/caesar-salad.jpg" alt="سالاد سزار" loading="lazy">
+          </figure>
+          <div class="item__body">
+            <div class="item__top">
+              <h3 class="item__name">
+                سالاد سزار
+                <span class="item__en" dir="ltr">Insalata Caesar</span>
+              </h3>
+              <span class="item__price">۱۸۵٬۰۰۰ تومان</span>
+            </div>
+            <p class="item__desc">کاهوی رومی · نان تست · سس سزار · پنیر پارمزان</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- =========================================================
+     فوتر — ساعات کاری، نشانی، اینستاگرام
+     ========================================================= -->
+<footer class="footer">
+  <div class="wrap">
+
+    <p class="footer__brand">کافه رستوران استارپارس</p>
+
+    <div class="footer__grid">
+
+      <!-- ✏️ ساعات کاری -->
+      <div>
+        <p class="footer__label">ساعات کاری</p>
+        <p class="footer__value">همه روزه از ساعت ۸:۰۰ الی ۲۳:۳۰</p>
+      </div>
+
+      <!-- ✏️ نشانی -->
+      <div>
+        <p class="footer__label">نشانی</p>
+        <address class="footer__value">ایران استان گلستان شهر علی آباد کتول</address>
+      </div>
+
+      <!-- ✏️ اینستاگرام -->
+      <div>
+        <p class="footer__label">ما را دنبال کنید</p>
+        <a class="footer__value footer__link" href="#" dir="ltr">@Starparse</a>
+        <br>
+        <a class="footer__value footer__link" href="#" dir="ltr">شماره تماس : 09123456789</a>
+      </div>
+
+    </div>
+
+    <p class="footer__note">سفارش خود را به همکاران ما اعلام فرمایید.</p>
+    <p class="footer__copy"> کافه رستوران استارپارس · منوی دیجیتال</p>
+     <p class="footer__copy">© حق کپی رایت این سایت با مانی زرگر میباشد ©</p>
+
+  </div>
+</footer>
+
+</body>
+</html>
